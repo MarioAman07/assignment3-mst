@@ -6,12 +6,12 @@ import java.util.Map;
 public class DisjointSetUnion {
     private final Map<String, String> parent;
     private final Map<String, Integer> size;
-    private long unionOperationCount;
+    private long operationCount;
 
     public DisjointSetUnion(Iterable<String> elements) {
         this.parent = new HashMap<>();
         this.size = new HashMap<>();
-        this.unionOperationCount = 0;
+        this.operationCount = 0;
 
         for (String element : elements) {
             parent.put(element, element);
@@ -29,16 +29,14 @@ public class DisjointSetUnion {
         root = find(root);
         parent.put(i, root);
 
-        unionOperationCount++;
+        operationCount++;
 
         return root;
     }
 
-
     public boolean union(String i, String j) {
         String rootI = find(i);
         String rootJ = find(j);
-
 
         if (rootI.equals(rootJ)) {
             return false;
@@ -55,16 +53,16 @@ public class DisjointSetUnion {
             size.put(rootI, sizeI + sizeJ);
         }
 
-        unionOperationCount++;
+        operationCount++;
 
         return true;
     }
 
-    public long getUnionOperationCount() {
-        return unionOperationCount;
+    public long getOperationCount() {
+        return operationCount;
     }
 
     public void resetOperationCount() {
-        this.unionOperationCount = 0;
+        this.operationCount = 0;
     }
 }

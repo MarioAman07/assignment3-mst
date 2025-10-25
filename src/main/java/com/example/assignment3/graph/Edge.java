@@ -23,7 +23,6 @@ public class Edge {
         return weight;
     }
 
-    // Optional: for printing MST results
     @Override
     public String toString() {
         return from + " --(" + weight + ")-- " + to;

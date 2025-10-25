@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Graph {
-    // Map to quickly access vertices by their name
     private final Map<String, Vertex> vertices;
-    // List to store all edges, crucial for Kruskal's algorithm
     private final List<Edge> allEdges;
 
     public Graph() {
@@ -27,7 +25,6 @@ public class Graph {
     }
 
     public void addEdge(String from, String to, int weight) {
-        // Ensure vertices exist (needed when loading from JSON)
         addVertex(from);
         addVertex(to);
 
@@ -36,14 +33,9 @@ public class Graph {
 
         Edge edge = new Edge(from, to, weight);
 
-        // For Kruskal's, we only need 'allEdges'.
-        // For Prim's, we need the adjacency list. We implement both here.
-
-        // Add edge to adjacency list for both vertices (undirected)
         vertexFrom.addEdge(edge);
         vertexTo.addEdge(edge);
 
-        // Add to the master list of edges
         allEdges.add(edge);
     }
 

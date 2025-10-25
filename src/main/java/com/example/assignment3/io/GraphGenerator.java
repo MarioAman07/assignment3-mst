@@ -1,6 +1,5 @@
 package com.example.assignment3.io;
 
-// Import the classes from our dto package
 import com.example.assignment3.io.dto.EdgeDefinition;
 import com.example.assignment3.io.dto.GraphDefinition;
 import com.example.assignment3.io.dto.GraphInputFile;
@@ -21,18 +20,12 @@ public class GraphGenerator {
 
     public GraphGenerator() {
         this.mapper = new ObjectMapper();
-        // Enable pretty-printing (indented output)
         this.mapper.enable(SerializationFeature.INDENT_OUTPUT);
     }
 
-    /**
-     * [OLD METHOD]
-     * Generates and saves a set of graphs into a specified directory,
-     * with each graph in its own file.
-     */
+
     public void generateAndSaveSet(String directoryPath, String filePrefix, int count, int minV, int maxV, double densityFactor) {
         try {
-            // Create the directory if it doesn't exist
             Files.createDirectories(Paths.get(directoryPath));
         } catch (IOException e) {
             System.err.println("Failed to create directory: " + directoryPath);
@@ -67,17 +60,7 @@ public class GraphGenerator {
         }
     }
 
-    /**
-     * [NEW METHOD]
-     * Generates a set of graphs and RETURNS them as a List.
-     *
-     * @param idPrefix      An identifier for logging (e.g., "small")
-     * @param count         Number of graphs to generate
-     * @param minV          Min vertices
-     * @param maxV          Max vertices
-     * @param densityFactor Graph density
-     * @return A list of generated graphs
-     */
+
     public List<GraphDefinition> generateSet(String idPrefix, int count, int minV, int maxV, double densityFactor) {
         List<GraphDefinition> generatedGraphs = new ArrayList<>();
 
@@ -105,10 +88,6 @@ public class GraphGenerator {
     }
 
 
-    /**
-     * [PRIVATE METHOD - UNCHANGED LOGIC]
-     * Generates a single connected graph.
-     */
     private GraphDefinition generateConnectedGraph(int id, int numVertices, int numEdges) {
         List<String> nodes = new ArrayList<>();
         for (int i = 0; i < numVertices; i++) {
@@ -118,12 +97,12 @@ public class GraphGenerator {
         List<EdgeDefinition> edges = new ArrayList<>();
         Set<String> existingEdges = new HashSet<>();
 
-        // 1. Ensure connectivity: create a random spanning tree (guarantees V-1 edges)
+
         List<Integer> vertexIndices = new ArrayList<>();
         for (int i = 0; i < numVertices; i++) {
             vertexIndices.add(i);
         }
-        Collections.shuffle(vertexIndices, random); // Shuffle to make the tree random, not just a line
+        Collections.shuffle(vertexIndices, random);
 
         for (int i = 0; i < numVertices - 1; i++) {
             String from = "V" + vertexIndices.get(i);
@@ -134,10 +113,9 @@ public class GraphGenerator {
         }
 
 
-        // 2. Add remaining edges to reach numEdges
         int edgesToAdd = numEdges - (numVertices - 1);
-        int safetyBreak = 0; // Fuse to prevent infinite loops
-        int maxTries = numEdges * 10; // Max attempts, esp. for dense graphs
+        int safetyBreak = 0;
+        int maxTries = numEdges * 10;
 
         while (edgesToAdd > 0 && safetyBreak < maxTries) {
             String from = "V" + random.nextInt(numVertices);
@@ -145,7 +123,7 @@ public class GraphGenerator {
 
             if (from.equals(to)) {
                 safetyBreak++;
-                continue; // No self-loops
+                continue;
             }
 
             String edgeKey = getEdgeKey(from, to);
@@ -165,13 +143,7 @@ public class GraphGenerator {
         return new GraphDefinition(id, nodes, edges);
     }
 
-    /**
-     * [PRIVATE METHOD - UNCHANGED LOGIC]
-     * Creates a unique key for a vertex pair to avoid duplicates
-     * (e.g., V1-V2 and V2-V1 are the same key).
-     */
     private String getEdgeKey(String from, String to) {
-        // Sort to ensure V1-V2 and V2-V1 are the same key
         if (from.compareTo(to) > 0) {
             String temp = from;
             from = to;
