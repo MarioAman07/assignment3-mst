@@ -15,6 +15,11 @@ public class KruskalsAlgorithm {
 
     public KruskalResult findMST(Graph graph) {
         edgeComparisonCount = 0;
+        int vertices = graph.getVertexCount();
+
+        if (vertices <= 1) {
+            return new KruskalResult(new ArrayList<>(), 0, 0, true);
+        }
 
         List<String> vertexNames = new ArrayList<>(graph.getVertices().keySet());
         this.dsu = new DisjointSetUnion(vertexNames);
@@ -26,7 +31,7 @@ public class KruskalsAlgorithm {
 
         List<Edge> mstEdges = new ArrayList<>();
         long totalCost = 0;
-        int edgesToInclude = graph.getVertexCount() - 1;
+        int edgesToInclude = vertices - 1;
 
         for (Edge edge : sortedEdges) {
             edgeComparisonCount++;

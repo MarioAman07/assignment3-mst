@@ -14,6 +14,10 @@ public class PrimsAlgorithm {
         operationCount = 0;
         int V = graph.getVertexCount();
 
+        if (V <= 1) {
+            return new PrimResult(new ArrayList<>(), 0, operationCount, true);
+        }
+
         Map<String, Long> key = new HashMap<>();
         Map<String, String> parent = new HashMap<>();
         Set<String> mstSet = new HashSet<>();
@@ -26,60 +30,77 @@ public class PrimsAlgorithm {
             operationCount++;
         }
 
-        String startVertexName = graph.getVertices().keySet().iterator().next();
-        key.put(startVertexName, 0L);
-        pq.add(new VertexKey(startVertexName, 0L));
-        operationCount++;
-
         List<Edge> mstEdges = new ArrayList<>();
         long totalCost = 0;
 
-        while (!pq.isEmpty() && mstSet.size() < V) {
+        // Внешний цикл для обработки всех компонентов (MSF)
+        while (mstSet.size() < V) {
 
-            VertexKey uKey = pq.poll();
-            String uName = uKey.name;
-            operationCount++;
-
-            if (mstSet.contains(uName)) {
-                operationCount++;
-                continue;
-            }
-
-            mstSet.add(uName);
-
-            if (parent.get(uName) != null) {
-                String pName = parent.get(uName);
-                for (Edge edge : graph.getVertex(pName).getEdges()) {
-                    operationCount++;
-                    if ((edge.getFrom().equals(pName) && edge.getTo().equals(uName)) ||
-                            (edge.getFrom().equals(uName) && edge.getTo().equals(pName))) {
-
-                        mstEdges.add(edge);
-                        totalCost += edge.getWeight();
+            // Находим необработанную вершину для старта нового компонента
+            if (pq.isEmpty()) {
+                String startVertexName = null;
+                for (String name : graph.getVertices().keySet()) {
+                    if (!mstSet.contains(name)) {
+                        startVertexName = name;
                         break;
                     }
                 }
+
+                if (startVertexName == null) break;
+
+                key.put(startVertexName, 0L);
+                pq.add(new VertexKey(startVertexName, 0L));
+                operationCount++;
             }
 
-            Vertex u = graph.getVertex(uName);
-            for (Edge edge : u.getEdges()) {
+            // Внутренний цикл Прима
+            while (!pq.isEmpty()) {
+
+                VertexKey uKey = pq.poll();
+                String uName = uKey.name;
                 operationCount++;
 
-                String vName = edge.getFrom().equals(uName) ? edge.getTo() : edge.getFrom();
-                int weight = edge.getWeight();
-
-                if (!mstSet.contains(vName) && (long) weight < key.get(vName)) {
-
-                    key.put(vName, (long) weight);
-                    parent.put(vName, uName);
-
-                    pq.add(new VertexKey(vName, (long) weight));
+                if (mstSet.contains(uName)) {
                     operationCount++;
+                    continue;
+                }
+
+                mstSet.add(uName);
+
+                if (parent.get(uName) != null) {
+                    String pName = parent.get(uName);
+                    for (Edge edge : graph.getVertex(pName).getEdges()) {
+                        operationCount++;
+                        if ((edge.getFrom().equals(pName) && edge.getTo().equals(uName)) ||
+                                (edge.getFrom().equals(uName) && edge.getTo().equals(pName))) {
+
+                            mstEdges.add(edge);
+                            totalCost += edge.getWeight();
+                            break;
+                        }
+                    }
+                }
+
+                Vertex u = graph.getVertex(uName);
+                for (Edge edge : u.getEdges()) {
+                    operationCount++;
+
+                    String vName = edge.getFrom().equals(uName) ? edge.getTo() : edge.getFrom();
+                    int weight = edge.getWeight();
+
+                    if (!mstSet.contains(vName) && (long) weight < key.get(vName)) {
+
+                        key.put(vName, (long) weight);
+                        parent.put(vName, uName);
+
+                        pq.add(new VertexKey(vName, (long) weight));
+                        operationCount++;
+                    }
                 }
             }
         }
 
-        boolean isConnected = (mstSet.size() == V);
+        boolean isConnected = (mstEdges.size() == V - 1);
 
         return new PrimResult(mstEdges, totalCost, operationCount, isConnected);
     }
