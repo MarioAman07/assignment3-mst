@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Locale;
 
 public class CsvSummaryWriter {
 
@@ -21,7 +22,7 @@ public class CsvSummaryWriter {
                     continue;
                 }
 
-                String line = String.format("%d,%d,%d,%d,%d,%.4f,%.4f,%d,%d",
+                String line = String.format(Locale.US, "%d,%d,%d,%d,%d,%.4f,%.4f,%d,%d",
                         result.graph_id,
                         result.input_stats.vertices,
                         result.input_stats.edges,
