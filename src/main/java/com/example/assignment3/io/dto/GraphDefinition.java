@@ -13,7 +13,6 @@ public class GraphDefinition {
     @JsonProperty("edges")
     private List<EdgeDefinition> edges;
 
-    // Пустой конструктор для Jackson
     public GraphDefinition() {}
 
     public GraphDefinition(int id, List<String> nodes, List<EdgeDefinition> edges) {
@@ -22,7 +21,6 @@ public class GraphDefinition {
         this.edges = edges;
     }
 
-    // Геттеры и сеттеры
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
     public List<String> getNodes() { return nodes; }

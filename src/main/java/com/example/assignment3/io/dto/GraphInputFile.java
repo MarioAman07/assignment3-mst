@@ -7,7 +7,6 @@ public class GraphInputFile {
     @JsonProperty("graphs")
     private List<GraphDefinition> graphs;
 
-    // Пустой конструктор для Jackson
     public GraphInputFile() {}
 
     public GraphInputFile(List<GraphDefinition> graphs) {

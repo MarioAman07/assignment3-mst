@@ -12,7 +12,6 @@ public class EdgeDefinition {
     @JsonProperty("weight")
     private int weight;
 
-    // Пустой конструктор для Jackson
     public EdgeDefinition() {}
 
     public EdgeDefinition(String from, String to, int weight) {
@@ -21,7 +20,6 @@ public class EdgeDefinition {
         this.weight = weight;
     }
 
-    // Геттеры и сеттеры
     public String getFrom() { return from; }
     public void setFrom(String from) { this.from = from; }
     public String getTo() { return to; }
